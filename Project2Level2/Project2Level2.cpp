@@ -45,6 +45,16 @@ struct stGameResults {
 };
 
 
+
+void setScreenColor(result result)
+{
+	if (result == ::correct) 
+	    system("color 2F"); //turn screen to Green
+	else 
+		system("color 4F"); //turn screen to Red
+	
+}
+
 int random(int from, int to) {
 	return rand() % (to - from + 1) + from;
 }
@@ -173,7 +183,6 @@ result playOneQuestion(stQuestionsInfo &questionInfo) {
 		}
 }
 
-
 // Function to convert operation enum to string
 string getOpTypeAsString(enOperationType opType) {
 	switch (opType) {
@@ -239,10 +248,12 @@ stGameResults playGame(int numOfQuestions) {
 		questionInfo.questionNumber = questNumber;
 		questionInfo.questionResult = playOneQuestion(questionInfo);
 		printOneQuestResult(questionInfo);
+		setScreenColor(questionInfo.questionResult);
 		if (questionInfo.questionResult == ::correct)
 			playerWinTimes++;
 		else 
 			playerLoseTimes++;
+
 	}
 	return fillGameResults(numOfQuestions, playerWinTimes,
 		playerLoseTimes, questionInfo);

@@ -1,4 +1,4 @@
 ﻿  Project2Level2.cpp
-D:\MathGame\Project2Level2\Project2Level2.cpp(106,1): warning C4715: 'getOpNumberInChar': not all control paths return a value
-D:\MathGame\Project2Level2\Project2Level2.cpp(174,1): warning C4715: 'playOneQuestion': not all control paths return a value
+D:\MathGame\Project2Level2\Project2Level2.cpp(116,1): warning C4715: 'getOpNumberInChar': not all control paths return a value
+D:\MathGame\Project2Level2\Project2Level2.cpp(184,1): warning C4715: 'playOneQuestion': not all control paths return a value
   Project2Level2.vcxproj -> D:\MathGame\Project2Level2\x64\Debug\Project2Level2.exe
