@@ -24,6 +24,7 @@ enum result {
 	incorrect = 2
 };
 
+
 struct stQuestionsInfo {
 	short questionNumber;
 	enQuestionsLevel questionLevel;
@@ -34,9 +35,12 @@ struct stQuestionsInfo {
 
 
 struct stGameResults {
+	enQuestionsLevel questionLevel;
+	enOperationType opType;
 	short numberOfQuestions;
 	int numbOfRightAnswers;
-	int numberOfWrongAnswers;
+	int numbOfWrongAnswers;
+	string markResult;
 
 };
 
@@ -102,7 +106,7 @@ char getOpNumberInChar(int opNum) {
 }
 
 
-void playOneQuestion(stQuestionsInfo &questionInfo) {
+result playOneQuestion(stQuestionsInfo &questionInfo) {
 	int correctAnswer = 0, playerAnswer, mixOpNum;
 	char mixOp;
 	int num1 = getNumbers(questionInfo.questionLevel);
@@ -110,37 +114,41 @@ void playOneQuestion(stQuestionsInfo &questionInfo) {
 	questionInfo.questionResult = ::incorrect;
 		switch (questionInfo.opType) {
 		case(::add):
-			cout << num1 << endl << num2 << " + \n" << "_________" << endl;
+			cout << endl << num1 << endl << num2 << " + \n" << "_________" << endl;
 			cin >> playerAnswer;
 			if (playerAnswer == num1 + num2) {
 				questionInfo.questionResult = ::correct;
+				 return  questionInfo.questionResult;
 			}
 			break;
 		case(::sub):
-			cout << num1 << endl << num2 << " - \n" << "_________" << endl;
+			cout << endl << num1 << endl << num2 << " - \n" << "_________" << endl;
 			cin >> playerAnswer;
 			if (playerAnswer == num1 - num2) {
 				questionInfo.questionResult = ::correct;
+				return questionInfo.questionResult;
 			}
 			break;
 		case(::mul):
-			cout << num1 << endl << num2 << " * \n" << "_________" << endl;
+			cout << endl << num1 << endl << num2 << " * \n" << "_________" << endl;
 			cin >> playerAnswer;
 			if (playerAnswer == num1 * num2) {
 				questionInfo.questionResult = ::correct;
+				return questionInfo.questionResult;
 			}
 			break;
 		case(::divi):
-			cout << num1 << endl << num2 << " / \n" << "_________" << endl;
+			cout << endl << num1 << endl << num2 << " / \n" << "_________" << endl;
 			cin >> playerAnswer;
 			if (playerAnswer == num1 / num2) {
 				questionInfo.questionResult = ::correct;
+				 return questionInfo.questionResult = ::correct;
 			}
 			break;
 		case(::mix):
 			mixOpNum = random(1, 4);
 			mixOp = getOpNumberInChar(mixOpNum);
-			cout << num1 << endl << num2 << " " << mixOp << " \n" << "_________" << endl;
+			cout << endl << num1 << endl << num2 << " " << mixOp << " \n" << "_________" << endl;
 			cin >> playerAnswer;
 			switch (mixOp) {
 			case '+':
@@ -158,7 +166,8 @@ void playOneQuestion(stQuestionsInfo &questionInfo) {
 			}
 			if (correctAnswer == playerAnswer) {
 				questionInfo.questionResult = ::correct;
-				break;
+				return questionInfo.questionResult;
+				
 			}
 			  
 		}
@@ -189,29 +198,76 @@ string getQuestionLevelAsString(enQuestionsLevel level) {
 }
 
 void printOneQuestResult(stQuestionsInfo questionInfo) {
-	cout << "Question Level: " << getQuestionLevelAsString(questionInfo.questionLevel) << endl;
-	cout << "Operation Type: " << getOpTypeAsString(questionInfo.opType) << endl;
 	if (questionInfo.questionResult == correct) {
-		cout << "Result: Correct" << endl;
+		cout << "Right Answer :-)" << endl;
 	}
 	else {
-		cout << "Result: Incorrect" << endl;
+		cout << "Wrong Answer :-(" << endl;
 	}
 }
 
+string gameMarkResult(short playerWinTimes, short
+	playerLoseTimes)
+{
+	if (playerWinTimes > playerLoseTimes)
+		return " PASS :-)";
+	else
+		return "FAIL :-(";
+
+}
+
+stGameResults fillGameResults(int numOfQuestions, short
+	playerWinTimes, short playerLoseTimes, stQuestionsInfo questionInfo)
+{
+	stGameResults GameResults;
+	GameResults.numberOfQuestions = numOfQuestions;
+	GameResults.numbOfRightAnswers = playerWinTimes;
+	GameResults.numbOfWrongAnswers = playerLoseTimes;
+	GameResults.questionLevel = questionInfo.questionLevel;
+	GameResults.opType = questionInfo.opType;
+	GameResults.markResult = gameMarkResult(playerWinTimes, playerLoseTimes);
+	return GameResults;
+}
+
+stGameResults playGame(int numOfQuestions) {
+	stQuestionsInfo questionInfo;
+	short playerWinTimes = 0, playerLoseTimes = 0;
+	questionInfo.questionLevel = getQuestionsLevel();
+	questionInfo.opType = getOpType();
+	for (int questNumber = 1; questNumber <= numOfQuestions; questNumber++) {
+		cout << "Questions [" << questNumber << "]\n";
+		questionInfo.questionNumber = questNumber;
+		questionInfo.questionResult = playOneQuestion(questionInfo);
+		printOneQuestResult(questionInfo);
+		if (questionInfo.questionResult == ::correct)
+			playerWinTimes++;
+		else 
+			playerLoseTimes++;
+	}
+	return fillGameResults(numOfQuestions, playerWinTimes,
+		playerLoseTimes, questionInfo);
+	}
 
 
 
+void printGameResults(stGameResults gameResults) {
+	cout << "\n____________________________________________\n\n";
+	cout << "Final Result is " << gameResults.markResult << endl;
+	cout << "_____________________________________________\n\n";
+	cout << "Number of Questions: " << gameResults.numberOfQuestions << endl;
+	cout << "Question Level     : " << getQuestionLevelAsString(gameResults.questionLevel) << endl;
+	cout << "Operation Type     : " << getOpTypeAsString(gameResults.opType) << endl;
+	cout << "Number of Right Answers : " << gameResults.numbOfRightAnswers << endl;
+	cout << "Number of Wrong Answers : " << gameResults.numbOfWrongAnswers << endl;
+	cout << "_____________________________________________\n\n";
+}
 
 
 int main()
 {
 	srand((unsigned)time(NULL));
-	stQuestionsInfo questionInfo;
-	questionInfo.questionLevel = getQuestionsLevel();
-	questionInfo.opType = getOpType();
-	playOneQuestion(questionInfo);
-	printOneQuestResult(questionInfo);
+	stGameResults gameResults = playGame(getQuestionsNumber());
+	printGameResults(gameResults);
 	return 0;
 }
 
