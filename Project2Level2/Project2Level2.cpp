@@ -20,8 +20,8 @@ enum enOperationType {
 };
 
 enum result {
-	correct = 1,
-	incorrect = 2
+	right = 1,
+	wrong = 2
 };
 
 
@@ -48,7 +48,7 @@ struct stGameResults {
 
 void setScreenColor(result result)
 {
-	if (result == ::correct) 
+	if (result == ::right) 
 	    system("color 2F"); //turn screen to Green
 	else 
 		system("color 4F"); //turn screen to Red
@@ -121,13 +121,13 @@ result playOneQuestion(stQuestionsInfo &questionInfo) {
 	char mixOp;
 	int num1 = getNumbers(questionInfo.questionLevel);
 	int num2 = getNumbers(questionInfo.questionLevel);
-	questionInfo.questionResult = ::incorrect;
+	questionInfo.questionResult = ::wrong;
 		switch (questionInfo.opType) {
 		case(::add):
 			cout << endl << num1 << endl << num2 << " + \n" << "_________" << endl;
 			cin >> playerAnswer;
 			if (playerAnswer == num1 + num2) {
-				questionInfo.questionResult = ::correct;
+				questionInfo.questionResult = ::right;
 				 return  questionInfo.questionResult;
 			}
 			break;
@@ -135,7 +135,7 @@ result playOneQuestion(stQuestionsInfo &questionInfo) {
 			cout << endl << num1 << endl << num2 << " - \n" << "_________" << endl;
 			cin >> playerAnswer;
 			if (playerAnswer == num1 - num2) {
-				questionInfo.questionResult = ::correct;
+				questionInfo.questionResult = ::right;
 				return questionInfo.questionResult;
 			}
 			break;
@@ -143,7 +143,7 @@ result playOneQuestion(stQuestionsInfo &questionInfo) {
 			cout << endl << num1 << endl << num2 << " * \n" << "_________" << endl;
 			cin >> playerAnswer;
 			if (playerAnswer == num1 * num2) {
-				questionInfo.questionResult = ::correct;
+				questionInfo.questionResult = ::right;
 				return questionInfo.questionResult;
 			}
 			break;
@@ -151,8 +151,8 @@ result playOneQuestion(stQuestionsInfo &questionInfo) {
 			cout << endl << num1 << endl << num2 << " / \n" << "_________" << endl;
 			cin >> playerAnswer;
 			if (playerAnswer == num1 / num2) {
-				questionInfo.questionResult = ::correct;
-				 return questionInfo.questionResult = ::correct;
+				questionInfo.questionResult = ::right;
+				 return questionInfo.questionResult = ::right;
 			}
 			break;
 		case(::mix):
@@ -175,7 +175,7 @@ result playOneQuestion(stQuestionsInfo &questionInfo) {
 				break;
 			}
 			if (correctAnswer == playerAnswer) {
-				questionInfo.questionResult = ::correct;
+				questionInfo.questionResult = ::right;
 				return questionInfo.questionResult;
 				
 			}
@@ -207,7 +207,7 @@ string getQuestionLevelAsString(enQuestionsLevel level) {
 }
 
 void printOneQuestResult(stQuestionsInfo questionInfo) {
-	if (questionInfo.questionResult == correct) {
+	if (questionInfo.questionResult == ::right) {
 		cout << "Right Answer :-)" << endl;
 	}
 	else {
@@ -218,10 +218,15 @@ void printOneQuestResult(stQuestionsInfo questionInfo) {
 string gameMarkResult(short playerWinTimes, short
 	playerLoseTimes)
 {
-	if (playerWinTimes > playerLoseTimes)
+	if (playerWinTimes > playerLoseTimes) {
+		setScreenColor(::right);
 		return " PASS :-)";
-	else
+		
+	}
+	else {
+		setScreenColor(::wrong);
 		return "FAIL :-(";
+	}
 
 }
 
@@ -249,7 +254,7 @@ stGameResults playGame(int numOfQuestions) {
 		questionInfo.questionResult = playOneQuestion(questionInfo);
 		printOneQuestResult(questionInfo);
 		setScreenColor(questionInfo.questionResult);
-		if (questionInfo.questionResult == ::correct)
+		if (questionInfo.questionResult == ::right)
 			playerWinTimes++;
 		else 
 			playerLoseTimes++;
@@ -274,11 +279,25 @@ void printGameResults(stGameResults gameResults) {
 }
 
 
+void startGame() {
+	char playerAnswer = 'Y';
+	do {
+		system("cls");
+		system("color 0F");
+		stGameResults gameResults = playGame(getQuestionsNumber());
+		printGameResults(gameResults);
+		cout << "Do you want to play again Y/N ?\n";
+		cin >> playerAnswer;
+	} while (playerAnswer == 'y' || playerAnswer == 'Y');
+}
+
+
+
+
 int main()
 {
 	srand((unsigned)time(NULL));
-	stGameResults gameResults = playGame(getQuestionsNumber());
-	printGameResults(gameResults);
+	startGame();
 	return 0;
 }
 
