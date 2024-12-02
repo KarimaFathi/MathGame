@@ -9,3 +9,5 @@ Game Result: After completing all questions, the game shows a summary of the pla
 Color Feedback: The background color of the terminal changes based on the player's answer (Green for correct answers, Red for incorrect answers).
 
 # Output 
+
+![math game output](images/GameOutput.png)
